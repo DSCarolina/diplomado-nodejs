@@ -4,7 +4,7 @@ import { Status } from '../constants/index.js';
 import { encriptar } from '../common/bcrypt.js';
 import { Op } from 'sequelize';
 
-async function getUsers1(req, res, next) {
+async function getUsers(req, res, next) {
   try {
     const users = await User.findAll({
       attributes: ['id', 'username', 'password', 'status'],
