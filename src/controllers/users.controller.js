@@ -4,7 +4,7 @@ import { Status } from '../constants/index.js';
 import { encriptar } from '../common/bcrypt.js';
 import { Op } from 'sequelize';
 
-async function getUsers(req, res, next) {
+async function getUsers1(req, res, next) {
   try {
     const users = await User.findAll({
       attributes: ['id', 'username', 'password', 'status'],
@@ -138,7 +138,7 @@ async function getTasks(req, res, next) {
   }
 }
 
-async function getUsers(req, res) {
+async function getUsers(req, res,next) {
   const { page, limit, orderBy, orderDir = 'DESC', search, status } = req.query;
   const order =
     orderBy && orderDir ? [[orderBy, orderDir.toUpperCase()]] : [['id', 'ASC']]; // Orden por defecto
