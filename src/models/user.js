@@ -56,11 +56,10 @@ User.beforeCreate(async (user) => {
   }
 });
 
-User.beforeUpdate(async (user) => {
-  console.log('entroooo')
-  try {
-    user.password = await encriptar(user.password);
-  } catch (error) {
-    next(error);
-  }
-});
+// User.beforeUpdate(async (user) => {
+//   try {
+//     user.password = await encriptar(user.password);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
