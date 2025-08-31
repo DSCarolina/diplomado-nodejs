@@ -17,7 +17,10 @@ router
   .get(authenticateToken, userController.getUser)
   .put(authenticateToken, userController.updateUser)
   .delete(authenticateToken, userController.deleteUser)
-  .patch(authenticateToken, userController.activateInactivate);
+  .patch(authenticateToken, userController.activateInactivate)
+router
+  .route('/changepass/:id')
+  .patch(authenticateToken, userController.cambioPassword);
 
 router.get('/:id/tasks', authenticateToken, userController.getTasks);
 

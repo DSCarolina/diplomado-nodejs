@@ -2,7 +2,7 @@ import { comparar } from '../common/bcrypt.js';
 import config from '../config/env.js';
 import { User } from '../models/user.js';
 import jwt from 'jsonwebtoken';
-
+import { Status } from '../constants/index.js';
 async function login(req, res, next) {
   try {
     const { username, password } = req.body;
@@ -17,8 +17,10 @@ async function login(req, res, next) {
 
     const isMatch = await comparar(password, user.password);
 
-    if (!isMatch) return res.status(403).json({ message: 'User not found' });
+    if (!isMatch ) return res.status(403).json({ message: 'User not found' });
 
+    if (user.status == Status.INACTIVE ) return res.status(403).json({ message: 'User not found' });
+    
     const token = jwt.sign({ userId: user.id }, config.JWT_SECRET, {
       expiresIn: eval(config.JWT_EXPIRES_SECONDS),
     });

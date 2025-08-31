@@ -48,23 +48,50 @@ async function getUser(req, res, next) {
   }
 }
 
+// async function updateUser(req, res, next) {
+//   const { id } = req.params;
+//   const { username, password } = req.body;
+//   try {
+//     if (!username && !password) {
+//       return res
+//         .status(400)
+//         .json({ message: 'Username or password is required' });
+//     }
+
+//     // TODO: revisar ya q esto deberia ser automático
+//     const passwordEncriptado = await encriptar(password);
+
+//     const user = await User.update(
+//       {
+//         username,
+//         password: passwordEncriptado,
+//       },
+//       {
+//         where: {
+//           id,
+//         },
+//       }
+//     );
+
+//     return res.json(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
 async function updateUser(req, res, next) {
   const { id } = req.params;
-  const { username, password } = req.body;
+  const { username } = req.body;
   try {
-    if (!username && !password) {
+    if (!username) {
       return res
         .status(400)
-        .json({ message: 'Username or password is required' });
+        .json({ message: 'Username is required' });
     }
-
-    // TODO: revisar ya q esto deberia ser automático
-    const passwordEncriptado = await encriptar(password);
 
     const user = await User.update(
       {
-        username,
-        password: passwordEncriptado,
+        username
       },
       {
         where: {
@@ -107,6 +134,26 @@ async function activateInactivate(req, res, next) {
       return res.status(409).json({ message: 'Same status' });
 
     user.status = status;
+    await user.save();
+    return res.json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function cambioPassword(req, res, next) {
+  const { id } = req.params;
+  const { password } = req.body;
+  try {
+    if (!password) return res.status(400).json({ message: 'Password is required' });
+
+    const user = await User.findByPk(id);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const passwordEncriptado = await encriptar(password);
+
+    user.password = passwordEncriptado;
     await user.save();
     return res.json(user);
   } catch (error) {
@@ -188,5 +235,6 @@ export default {
   updateUser,
   deleteUser,
   activateInactivate,
+  cambioPassword,
   getTasks,
 };
